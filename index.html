@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <div class="card">
+        <div class="details">
+            <div class="left">
+                <img src="download (5).jpeg" alt="">
+            </div>
+            <div class="right">
+                <h2>Cafe Latte</h2>
+                <p>Large</p>
+                <p>2% Milk</p>
+            </div>
+        </div>
+        <div class="controls">
+            <div class="amount">
+                <p><span id="counterValue">0</span> Shots</p>
+            </div>
+            <div class="function">
+                <button class="subtract-btn" id="subtractBtn"><i class="ri-subtract-line"></i></button>
+                <button class="add-btn" id="addBtn"><i class="ri-add-line"></i></button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Get elements
+        const subtractBtn = document.getElementById('subtractBtn');
+        const addBtn = document.getElementById('addBtn');
+        const counterValue = document.getElementById('counterValue');
+        
+        // Configuration
+        const config = {
+            minValue: 1,
+            maxValue: 10,
+            initialValue: 1,
+            step: 1
+        };
+
+        // Initialize counter
+        let currentValue = config.initialValue;
+        counterValue.textContent = currentValue.toString().padStart(1, '0');
+        updateButtonStates();
+
+        // Add button click handler
+        addBtn.addEventListener('click', () => {
+            if (currentValue < config.maxValue) {
+                currentValue += config.step;
+                updateDisplay();
+                updateButtonStates();
+            }
+        });
+
+        // Subtract button click handler
+        subtractBtn.addEventListener('click', () => {
+            if (currentValue > config.minValue) {
+                currentValue -= config.step;
+                updateDisplay();
+                updateButtonStates();
+            }
+        });
+
+        // Update display with animation
+        function updateDisplay() {
+            counterValue.textContent = currentValue.toString().padStart(1, '0');
+            
+            // Add animation class
+            counterValue.classList.add('changing');
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                counterValue.classList.remove('changing');
+            }, 300);
+        }
+
+        // Update button states (enable/disable)
+        function updateButtonStates() {
+            subtractBtn.disabled = currentValue <= config.minValue;
+            addBtn.disabled = currentValue >= config.maxValue;
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '+' || e.key === '=') {
+                e.preventDefault();
+                addBtn.click();
+            } else if (e.key === '-' || e.key === '_') {
+                e.preventDefault();
+                subtractBtn.click();
+            }
+        });
+
+        // Optional: Reset function
+        function resetCounter() {
+            currentValue = config.initialValue;
+            updateDisplay();
+            updateButtonStates();
+        }
+
+        // Optional: Expose reset function globally if needed
+        window.resetCounter = resetCounter;
+    </script>
+</body>
+</html>
